@@ -1,0 +1,48 @@
+---
+title: "world cup shooting preliminary"
+author: "Jose Sanchez"
+date: "2022-12-07"
+output: html_document
+---
+
+```{r}
+# Install the rvest package
+install.packages("rvest")
+
+# Load the rvest package
+library(rvest)
+
+```
+
+```{r}
+library(rvest)
+# Read the HTML of the web page
+html <- read_html("https://fbref.com/en/stathead/player_comparison.cgi?request=1&sum=0&comp_type=spec&dom_lg=1&spec_comps=1&player_id1=42fd9c7f&p1yrfrom=2022&player_id2=129af0db&p2yrfrom=2022&player_id3=16ceb862&p3yrfrom=2022&player_id4=1971591f&p4yrfrom=2022&player_id5=a1d5bd30&p5yrfrom=2022&player_id6=bc7dc64d&p6yrfrom=2022&player_id7=d70ce98e&p7yrfrom=2022")
+
+# Extract the table from the HTML
+table <- html_table(html)
+
+```
+
+```{r}
+
+shooting_table_og<-as.data.frame(table[[1]])
+shooting_table<-as.data.frame(table[[1]])
+names(shooting_table) <-  unlist(shooting_table[1,])
+#remove the first row
+shooting_table <- shooting_table[-1,]
+renamed_tbl<-shooting_table
+
+```
+
+```{r}
+
+colnames(renamed_tbl)[17] <- "Gls/90"
+colnames(renamed_tbl)[18] <- "Ast/90"
+colnames(renamed_tbl)[20] <- "G-PK/90"
+colnames(renamed_tbl)[26] <- "xG/90"
+colnames(renamed_tbl)[29] <- "npxG/90"
+numeric_table<-renamed_tbl[,6:30]
+numeric_table <-data.frame(lapply(numeric_table,as.numeric))
+
+```
